@@ -1,0 +1,144 @@
+******************************************  L8   *****************************************
+
+1. Write an assembly probram to print all the ASCII code from 0 to 
+255.
+
+.model small
+.stack 100h
+.data
+    msg db 'ASCII Codes: $'  ; Message to display before printing characters
+.code
+
+main proc
+    mov ax, @data    ; Load data segment
+    mov ds, ax
+
+    lea dx, msg      ; Load message address
+    mov ah, 9        ; DOS function to print a string
+    int 21h          ; Print "ASCII Codes: "
+
+    mov cl, 0        ; Start from ASCII 0
+
+print_loop:
+    mov dl, cl       ; Move ASCII value to DL
+    mov ah, 2        ; DOS function to print character
+    int 21h          ; Print character
+
+    inc cl           ; Increment CL to move to the next ASCII value
+    jnz print_loop   ; Loop until CL becomes 0 (after 255 it wraps to 0)
+
+exit:
+    mov ah, 4Ch      ; DOS function to terminate program
+    int 21h
+
+main endp
+end main
+
+
+2.  Put the sum of the first 50 terms of the arithmetic sequence
+ I, 5, 9, 13, ... in DX. Hints: Employ LOOP instructions to do the following. 
+first we find how many loops needed:
+ (last term – first term )/ difference
+ (148 – 1)/4 = 49 loops
+ So put cx = 49
+
+
+.MODEL SMALL
+.STACK 100h
+.CODE
+
+main proc
+    mov cx, 49   ; Loop counter (49 iterations)
+    mov ax, 1    ; First term
+    mov dx, 0    ; Sum accumulator
+
+sum_loop:
+    add dx, ax   ; Add term to sum
+    add ax, 4    ; Next term
+    loop sum_loop ; Repeat until CX = 0
+
+    mov ah, 4Ch
+    int 21h
+main endp
+end main
+
+
+3.  Put the sum 100 + 95 + 90 + ... + 5 in AX. Hints: Employ LOOP 
+instructions to do the following. 
+first we find how many loops needed:
+ (last term – first term )/ difference
+ (100 – 5)/5 = 19 loops
+ So put cx = 19
+
+.MODEL SMALL
+.STACK 100H
+.CODE
+
+main proc
+    mov ax, 0     ; Initialize sum to 0
+    mov cx, 19    ; Loop counter (19 iterations)
+    mov bx, 100   ; Starting value (first term)
+
+sum_loop:
+    add ax, bx    ; Add current term to sum
+    sub bx, 5     ; Move to the next term
+    loop sum_loop ; Decrement CX and repeat until CX = 0
+
+    mov ah, 4Ch
+    int 21h
+
+main endp
+end main
+
+
+4. Read a character and display it 50 times on the next line. Hints: 
+use LOOP instructions and put cx = 50
+ Sample Output
+ Enter a character: d
+ Ddddddddddddddddddddddddddddddddddddddddddddd
+ ddddd
+
+.MODEL SMALL
+.STACK 100H
+.DATA
+    MSG1 DB 'Enter a character: $'  ; Prompt message
+    NEWLINE DB 0DH, 0AH, '$'        ; Newline sequence
+
+.CODE
+MAIN PROC
+    ; Initialize Data Segment
+    MOV AX, @DATA
+    MOV DS, AX
+
+    ; Display the message "Enter a character: "
+    LEA DX, MSG1
+    MOV AH, 9
+    INT 21H
+
+    ; Read a character from the user
+    MOV AH, 1    ; DOS function to read a character
+    INT 21H      ; AL now contains the entered character
+
+    MOV BL, AL   ; Store character in BL for printing later
+
+    ; Print a new line
+    LEA DX, NEWLINE
+    MOV AH, 9
+    INT 21H
+
+    ; Set loop counter to 50
+    MOV CX, 50  
+
+PRINT_LOOP:
+    MOV DL, BL   ; Load the character into DL for printing
+    MOV AH, 2    ; DOS function to display character
+    INT 21H      ; Print character
+
+    LOOP PRINT_LOOP  ; Repeat until CX = 0
+
+    ; Terminate program
+    MOV AH, 4CH
+    INT 21H
+
+MAIN ENDP
+END MAIN

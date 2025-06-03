@@ -1,0 +1,200 @@
+Write a program to check whether a given input character is a vowel or not.
+
+.model small
+.stack 100h
+.data 
+
+a db 10,13, 'Enter a Character: $'
+b db 10,13, 'Character is a Vowel. $'
+c db 10,13, 'Character is not a Vowel. $'
+
+.code
+
+main proc
+
+    mov ax, @data
+    mov ds, ax
+
+    mov ah, 9
+    lea dx, a
+    int 21h
+
+    mov ah, 1
+    int 21h
+
+    mov bl, al
+
+    cmp bl, 'a'
+    je is_vowel
+    cmp bl, 'e'
+    je is_vowel
+    cmp bl, 'i'
+    je is_vowel
+    cmp bl, 'o'
+    je is_vowel
+    cmp bl, 'u'
+    je is_vowel
+    cmp bl, 'A'
+    je is_vowel
+    cmp bl, 'E'
+    je is_vowel
+    cmp bl, 'I'
+    je is_vowel
+    cmp bl, 'O'
+    je is_vowel
+    cmp bl, 'U'
+    je is_vowel
+
+    lea dx, c
+    mov ah, 9
+    int 21h
+    jmp exit
+
+is_vowel:
+    lea dx, b
+    mov ah, 9
+    int 21h
+
+exit:
+    mov ah, 4Ch
+    int 21h
+
+main endp
+end main
+
+
+Take an input character from user. Check it for letter and convert upper to lower or lower to upper using logical instructions.
+
+.model small
+.stack 100h
+.data
+
+a db 10,13, 'Enter a character: $'  
+b db 10,13, 'Converted character: $'
+ 
+.code 
+
+main proc
+   
+    mov ax, @data
+    mov ds, ax
+    
+    mov ah, 9
+    lea dx, a
+    int 21h
+    
+    mov ah, 1
+    int 21h     
+   
+    mov bl, al  
+    
+    cmp bl, 'a'  
+    jl not_lowercase
+    cmp bl, 'z' 
+    jg not_lowercase
+    
+    xor bl, 32  
+    jmp convert_done
+
+not_lowercase:
+    
+    cmp bl, 'A' 
+    jl not_uppercase
+    cmp bl, 'Z'  
+    jg not_uppercase
+    
+    
+    xor bl, 32  
+    jmp convert_done
+
+not_uppercase:
+    
+    jmp convert_done
+
+convert_done:
+    
+    mov ah, 9
+    lea dx, b
+    int 21h
+    
+    
+    mov dl, bl
+    mov ah, 2
+    int 21h       
+    
+exit:   
+    mov ah, 4ch
+    int 21h
+
+main endp
+end main
+
+Take an input character from user. Check it for number and find whether it is odd or even using TEST instruction.
+
+.model small
+.stack 100h
+.data 
+
+a db 10,13, 'Enter a Character: $'
+b db 10,13, 'The Entered Character is not a Number. $'
+c db 10,13, 'The Number is Even. $'
+d db 10,13, 'The Number is Odd. $'
+
+.code
+
+main proc
+
+    mov ax, @data
+    mov ds, ax
+
+    mov ah, 9
+    lea dx, a
+    int 21h
+
+    mov ah, 1
+    int 21h
+
+    mov bl, al
+
+    cmp bl, '0'
+    jl not_a_number
+    cmp bl, '9'
+    jg not_a_number
+
+    mov al, bl
+    sub al, '0'
+
+    test al, 1
+    jz is_even
+
+    lea dx, d
+    mov ah, 9
+    int 21h
+    jmp exit
+
+is_even: 
+
+    lea dx, c
+    mov ah, 9
+    int 21h
+    jmp exit
+
+not_a_number:
+    lea dx, b
+    mov ah, 9
+    int 21h
+
+exit:
+    mov ah, 4ch
+    int 21h
+
+main endp
+end main
+
+
+
+
+
+
+
+
